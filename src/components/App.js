@@ -13,16 +13,6 @@ function App() {
       .then((d) => setListings(d));
   }, []);
 
-  let displayListings = listings
-    ? searchTerm
-      ? listings.filter((item) =>
-          item.description.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      : listings
-    : null;
-
-  // console.log(displayListings);
-
   function handleDelete(id) {
     let newArray = listings.filter((item) => item.id !== id);
     fetch(`http://localhost:6001/listings/${id}`, {
@@ -55,18 +45,41 @@ function App() {
     return 0;
   }
 
-  function sort(e) {
-    // e.preventDefault();
-    console.log("sort");
+  let displayListings = listings
+    ? searchTerm
+      ? listings.filter((item) =>
+          item.description.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      : listings
+    : null;
+
+  function sort() {
     let newDisplay = displayListings.sort(compare);
     setSorting(true);
     setListings(newDisplay);
   }
 
-  function unsort(e) {
-    console.log("unsort");
+  function unsort() {
     displayListings.sort(uncompare);
     setSorting(false);
+  }
+
+  function handleNewFormSubmit(e) {
+    let newItem = {
+      description: e.description.value,
+      location: e.location.value,
+      image: e.image.value,
+    };
+    fetch(`http://localhost:6001/listings/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newItem),
+    })
+      .then((r) => r.json())
+      .then((d) => {
+        let newDisplay = [...listings, d];
+        setListings(newDisplay);
+      });
   }
 
   return (
@@ -76,6 +89,7 @@ function App() {
         sort={sort}
         unsort={unsort}
         sorting={sorting}
+        handleNewFormSubmit={handleNewFormSubmit}
       />
       {listings ? (
         <ListingsContainer

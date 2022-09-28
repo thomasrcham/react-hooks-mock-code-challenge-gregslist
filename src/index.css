@@ -18,6 +18,26 @@ header {
   justify-content: space-between;
 }
 
+.newForm {
+  border-bottom: 1px #ccc solid;
+  background: #eee;
+  padding-left: 5%;
+  padding-top: 2%;
+  padding-bottom: 2%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.button {
+  padding: 1px;
+  border-radius: 3px;
+}
+
+.input {
+  margin: 2px
+}
+
 header h1 {
   line-height: 1;
   font-family: serif;
