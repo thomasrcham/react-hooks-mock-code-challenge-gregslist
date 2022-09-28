@@ -5,6 +5,7 @@ import ListingsContainer from "./ListingsContainer";
 function App() {
   const [listings, setListings] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [sorting, setSorting] = useState(false);
 
   useEffect(() => {
     fetch("http://localhost:6001/listings")
@@ -20,7 +21,7 @@ function App() {
       : listings
     : null;
 
-  console.log(displayListings);
+  // console.log(displayListings);
 
   function handleDelete(id) {
     let newArray = listings.filter((item) => item.id !== id);
@@ -34,16 +35,48 @@ function App() {
     setSearchTerm(text);
   }
 
-  function handleSubmit() {
-    console.log("reset");
-    setSearchTerm("");
-    let displayListings = listings;
-    return displayListings;
+  function compare(a, b) {
+    if (a.location < b.location) {
+      return -1;
+    }
+    if (a.location > b.location) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function uncompare(a, b) {
+    if (a.id < b.id) {
+      return -1;
+    }
+    if (a.id > b.id) {
+      return 1;
+    }
+    return 0;
+  }
+
+  function sort(e) {
+    // e.preventDefault();
+    console.log("sort");
+    let newDisplay = displayListings.sort(compare);
+    setSorting(true);
+    setListings(newDisplay);
+  }
+
+  function unsort(e) {
+    console.log("unsort");
+    displayListings.sort(uncompare);
+    setSorting(false);
   }
 
   return (
     <div className="app">
-      <Header handleSearch={handleSearch} handleSubmit={handleSubmit} />
+      <Header
+        handleSearch={handleSearch}
+        sort={sort}
+        unsort={unsort}
+        sorting={sorting}
+      />
       {listings ? (
         <ListingsContainer
           listings={displayListings}
